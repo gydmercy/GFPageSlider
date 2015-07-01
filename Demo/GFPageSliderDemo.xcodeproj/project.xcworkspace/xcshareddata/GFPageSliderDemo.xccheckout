@@ -14,11 +14,11 @@
 		<string>github.com:gydmercy/GFPageSlider.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>GFPageSliderDemo.xcodeproj</string>
+	<string>Demo/GFPageSliderDemo.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>2BB843102DCDBB2C28E2BA99363F4CE6F21EE851</key>
-		<string>../..</string>
+		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>github.com:gydmercy/GFPageSlider.git</string>
@@ -34,7 +34,7 @@
 			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>2BB843102DCDBB2C28E2BA99363F4CE6F21EE851</string>
 			<key>IDESourceControlWCCName</key>
-			<string>GFPageSliderDemo</string>
+			<string>GFPageSlider</string>
 		</dict>
 	</array>
 </dict>
