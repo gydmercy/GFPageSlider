@@ -36,22 +36,26 @@
     self.view.backgroundColor = [UIColor whiteColor];
     self.edgesForExtendedLayout = UIRectEdgeNone; // 内容不扩展
     
-    // 使用步骤：
     
-    // 1、初始化PageSlider,并将其添加为当前View的子View
-    GFPageSlider *pageSlider = [[GFPageSlider alloc] initWithFrame:CGRectMake(0, 0, kSelfViewWidth, kSelfViewHeight - 64)
-                                                  withNumberOfPage:7];
-    [self.view addSubview:pageSlider];
     
-    // 2、初始化各个页面的ViewController，并传给PageSlider对象
+    // 初始化各个页面的ViewController
     [self initViewControllers];
-    [pageSlider setupViewControllors:_viewControllers];
+    
+    // GFPageSlider使用步骤：
+    
+    // 1、初始化PageSlider,传入页面数量、各个页面的ViewController对象以及Titles
+    GFPageSlider *pageSlider = [[GFPageSlider alloc] initWithFrame:CGRectMake(0, 0, kSelfViewWidth, kSelfViewHeight - 64)
+                                                   andNumberOfPage:7
+                                                andViewControllers:_viewControllers
+                                               andMenuButtonTitles:[NSArray arrayWithObjects:@"头条", @"娱乐", @"热点", @"体育", @"汽车", @"科技", @"财经", nil]];
+    
+    // 2、将其添加为当前View的子View
+    [self.view addSubview:pageSlider];
     
     // 3、设置PageSlider属性(不设置则使用默认值)
 //    pageSlider.menuHeight = 40.0f;
     pageSlider.menuNumberPerPage = 5;
 //    pageSlider.indicatorLineColor = [UIColor blueColor];
-    pageSlider.titles = [NSArray arrayWithObjects:@"头条", @"娱乐", @"热点", @"体育", @"汽车", @"科技", @"财经", nil];
 
     
 }

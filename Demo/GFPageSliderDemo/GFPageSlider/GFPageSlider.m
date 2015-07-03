@@ -33,9 +33,11 @@
 #pragma - mark Initialization
 
 - (instancetype)initWithFrame:(CGRect)frame
-             withNumberOfPage:(int)pageCount {
-    self = [super initWithFrame:frame];
+              andNumberOfPage:(int)pageCount
+           andViewControllers:(NSMutableArray *)viewControllers
+          andMenuButtonTitles:(NSArray *)titles {
     
+    self = [super initWithFrame:frame];
     if (self) {
         _pageCount = pageCount;
         _currentPage = 0; // 初始为第一页
@@ -49,6 +51,13 @@
         [self initPartitionLine];
         [self initIndicatorLine];
         [self initContentScrollView];
+        
+        // 设置传入的ViewController
+        [self setupViewControllors:viewControllers];
+        // 如果初始化的时候定义了MenuButton的Title，则设置，否则使用默认值[NSString stringWithFormat:@"第%d页",i + 1]
+        if (titles) {
+            [self setTitles:titles];
+        }
     }
     
     return self;
@@ -225,7 +234,7 @@
     
     // floor表示下取整
     // eg:  当前为第2页，假设屏幕宽度320
-    // 则_scrollView.contentOffset.x = 320, pageWidth = 320
+    // 则_contentScrollView.contentOffset.x = 320, pageWidth = 320
     // 所以page = floor((320 - 320/2) / 320) + 1 = 1,即表示第2页。
     _currentPage = floor((_contentScrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
 }
