@@ -36,8 +36,8 @@
  * @param   titles   MenuButton的名称(titles参数可为nil，表示使用默认值)
  */
 - (instancetype)initWithFrame:(CGRect)frame
-              andNumberOfPage:(int)pageCount
-           andViewControllers:(NSMutableArray *)viewControllers
-          andMenuButtonTitles:(NSArray *)titles;
+                 numberOfPage:(int)pageCount
+              viewControllers:(NSMutableArray *)viewControllers
+             menuButtonTitles:(NSArray *)titles;
 
 @end

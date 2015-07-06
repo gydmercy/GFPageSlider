@@ -45,9 +45,9 @@
     
     // 1、初始化PageSlider,传入页面数量、各个页面的ViewController对象以及Titles
     GFPageSlider *pageSlider = [[GFPageSlider alloc] initWithFrame:CGRectMake(0, 0, kSelfViewWidth, kSelfViewHeight - 64)
-                                                   andNumberOfPage:7
-                                                andViewControllers:_viewControllers
-                                               andMenuButtonTitles:[NSArray arrayWithObjects:@"头条", @"娱乐", @"热点", @"体育", @"汽车", @"科技", @"财经", nil]];
+                                                      numberOfPage:7
+                                                   viewControllers:_viewControllers
+                                                  menuButtonTitles:@[@"头条", @"娱乐", @"热点", @"体育", @"汽车", @"科技", @"财经"]];
     
     // 2、将其添加为当前View的子View
     [self.view addSubview:pageSlider];
@@ -56,7 +56,6 @@
 //    pageSlider.menuHeight = 40.0f;
     pageSlider.menuNumberPerPage = 5;
 //    pageSlider.indicatorLineColor = [UIColor blueColor];
-
     
 }
 

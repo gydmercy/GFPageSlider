@@ -23,8 +23,9 @@
 
 #define kSelfViewWidth self.frame.size.width
 #define kSelfViewHeight self.frame.size.height
-#define kIndicatorLineHeight 3 // 下划线指示器的高度
-#define kPartitionLineHeight 0.3 // 分隔线高度
+
+static const CGFloat kIndicatorLineHeight = 3.0f; // 下划线指示器的高度
+static const CGFloat kPartitionLineHeight = 0.3f; // 分隔线高度
 
 
 @implementation GFPageSlider
@@ -33,9 +34,9 @@
 #pragma - mark Initialization
 
 - (instancetype)initWithFrame:(CGRect)frame
-              andNumberOfPage:(int)pageCount
-           andViewControllers:(NSMutableArray *)viewControllers
-          andMenuButtonTitles:(NSArray *)titles {
+                 numberOfPage:(int)pageCount
+              viewControllers:(NSMutableArray *)viewControllers
+             menuButtonTitles:(NSArray *)titles {
     
     self = [super initWithFrame:frame];
     if (self) {
