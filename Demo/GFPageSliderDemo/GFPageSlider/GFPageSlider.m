@@ -31,7 +31,7 @@ static const CGFloat kPartitionLineHeight = 0.3f; // 分隔线高度
 @implementation GFPageSlider
 
 
-#pragma - mark Initialization
+#pragma mark - Initialization
 
 - (instancetype)initWithFrame:(CGRect)frame
                  numberOfPage:(int)pageCount
@@ -123,7 +123,7 @@ static const CGFloat kPartitionLineHeight = 0.3f; // 分隔线高度
 }
 
 
-#pragma - mark Settings
+#pragma mark - Settings
 
 // 设置菜单栏高度
 - (void)setMenuHeight:(CGFloat)menuHeight {
@@ -185,7 +185,7 @@ static const CGFloat kPartitionLineHeight = 0.3f; // 分隔线高度
 
 
 
-#pragma - mark Action
+#pragma mark - Actions
 
 // 点击MenuButton触发事件
 - (void)clickMenuButton:(UIButton *)menuButton {
@@ -228,7 +228,7 @@ static const CGFloat kPartitionLineHeight = 0.3f; // 分隔线高度
 }
 
 
-#pragma - mark <UIScrollViewDelegate>
+#pragma mark - <UIScrollViewDelegate>
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGFloat pageWidth = self.contentScrollView.frame.size.width;
