@@ -11,13 +11,13 @@
 
 @interface GFPageSlider() <UIScrollViewDelegate>
 
-@property (strong, nonatomic) UIScrollView *menuScrollView; // 菜单栏
-@property (strong, nonatomic) UIScrollView *contentScrollView; // 滑动页部分
-@property (strong, nonatomic) UIView *partitionLine; // 分隔线
-@property (strong, nonatomic) UIView *indicatorLine; // 下划线指示器
-@property (strong, nonatomic) UIButton *formerButton; // 前一次选择的MenuButton
-@property (nonatomic) int pageCount; // 页面数量
-@property (nonatomic) NSInteger currentPage; // 当前页
+@property (strong, nonatomic) UIScrollView *menuScrollView; //!< 菜单栏
+@property (strong, nonatomic) UIScrollView *contentScrollView; //!<  滑动页部分
+@property (strong, nonatomic) UIView *partitionLine; //!< 分隔线
+@property (strong, nonatomic) UIView *indicatorLine; //!< 下划线指示器
+@property (strong, nonatomic) UIButton *formerButton; //!< 前一次选择的MenuButton
+@property (nonatomic) int pageCount; //!< 页面数量
+@property (nonatomic) NSInteger currentPage; //!< 当前页
 
 @end
 

@@ -22,9 +22,9 @@
  * menuNumberPerPage 默认值为4
  * indicatorLineColor 默认值为[UIColor redColor]
  */
-@property (nonatomic) CGFloat menuHeight; // 菜单栏的高度
-@property (nonatomic) int menuNumberPerPage; // 屏幕可见Menu数量
-@property (nonatomic) UIColor *indicatorLineColor; // 下划线指示器的颜色
+@property (nonatomic) CGFloat menuHeight; //!< 菜单栏的高度
+@property (nonatomic) int menuNumberPerPage; //!< 屏幕可见Menu数量
+@property (nonatomic) UIColor *indicatorLineColor; //!< 下划线指示器的颜色
 
 
 /**
