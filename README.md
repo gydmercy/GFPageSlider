@@ -15,7 +15,7 @@ It can be flexible to custom the height of the menubar, the visible number of me
 
 GFPageSlider is available on [CocoaPods](https://cocoapods.org/). Just add the following to your project Podfile:
 
-	pod 'GFPageSlider', '~> 1.0.0'
+	pod 'GFPageSlider', '~> 1.0.1'
 
 
 ## Usage
