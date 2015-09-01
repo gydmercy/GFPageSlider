@@ -15,7 +15,7 @@ It can be flexible to custom the height of the menubar, the visible number of me
 
 GFPageSlider is available on [CocoaPods](https://cocoapods.org/). Just add the following to your project Podfile:
 
-	pod 'GFPageSlider', '~> 1.0.1'
+	pod 'GFPageSlider'
 
 
 ## Usage
@@ -24,12 +24,22 @@ GFPageSlider is available on [CocoaPods](https://cocoapods.org/). Just add the f
 
 	#import "GFPageSlider.h"
 	
-2、Initialize the PageSlider and imput the parameters:its frame, number of page, view controllers and the titles of the menuButton
+2、Initialize the page's controller and add them as current controller's child controller
+
+	[self initViewControllers];
+	
+    [self addChildViewController:_viewControllers[0]];
+    [self addChildViewController:_viewControllers[1]];
+    [self addChildViewController:_viewControllers[2]];
+    [self addChildViewController:_viewControllers[3]];
+
+
+2、Initialize the PageSlider and input the parameters:its frame, number of page, view controllers and the titles of the menuButton
 
 	GFPageSlider *pageSlider = [[GFPageSlider alloc] initWithFrame:CGRectMake(0, 0, kSelfViewWidth, kSelfViewHeight - 64)
-                                                      numberOfPage:7
+                                                      numberOfPage:4
                                                    viewControllers:_viewControllers
-                                                  menuButtonTitles:@[@"头条", @"娱乐", @"热点", @"体育", @"汽车", @"科技", @"财经"]];
+                                                  menuButtonTitles:@[@"头条", @"娱乐", @"热点", @"体育"]];
 
 3、Add pageSlider as the subview of current View
 
@@ -41,6 +51,12 @@ GFPageSlider is available on [CocoaPods](https://cocoapods.org/). Just add the f
     pageSlider.menuNumberPerPage = 5;
 	pageSlider.indicatorLineColor = [UIColor blueColor];
     
+5、If you want to add more pages, just prepare your page's controllers and then call this method
+
+	[pageSlider addPagesWithPageCount:3
+                      viewControllers:_viewControllers
+                     menuButtonTitles:@[@"汽车", @"科技", @"财经"]];
+
 
 ## License
 
