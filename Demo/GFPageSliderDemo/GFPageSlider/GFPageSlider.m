@@ -31,7 +31,7 @@ static const CGFloat kPartitionLineHeight = 0.3f; // 分隔线高度
 @implementation GFPageSlider
 
 
-#pragma mark - Initialization
+#pragma mark -
 
 - (instancetype)initWithFrame:(CGRect)frame
                  numberOfPage:(int)pageCount
@@ -48,22 +48,39 @@ static const CGFloat kPartitionLineHeight = 0.3f; // 分隔线高度
         _indicatorLineColor = [UIColor redColor]; // 默认IndicatorLine颜色为红色
         
         [self initMenuScrollView];
-        [self initMenuButtons];
         [self initPartitionLine];
         [self initIndicatorLine];
         [self initContentScrollView];
         
-        // 设置传入的ViewController
-        [self setupViewControllors:viewControllers];
+        [self setupViewControllors:viewControllers withFormerPageCount:0];
+        [self setupMenuButtonsWithFormerPageCount:0];
         // 如果初始化的时候定义了MenuButton的Title，则设置，否则使用默认值[NSString stringWithFormat:@"第%d页",i + 1]
         if (titles) {
-            [self setTitles:titles];
+            [self setupTitles:titles withFormerPageCount:0];
         }
     }
     
     return self;
 }
 
+- (void)addPagesWithPageCount:(int)pageCount
+              viewControllers:(NSMutableArray *)viewControllers
+             menuButtonTitles:(NSArray *)titles {
+    
+    _pageCount += pageCount;
+    
+    [self adjustMenuScrollViewAndContentScrollViewContentSize];
+    
+    [self setupViewControllors:viewControllers withFormerPageCount:(_pageCount - pageCount)];
+    [self setupMenuButtonsWithFormerPageCount:(_pageCount - pageCount)];
+    if (titles) {
+        [self setupTitles:titles withFormerPageCount:(_pageCount - pageCount)];
+    }
+    
+}
+
+
+#pragma mark - Initialization
 
 - (void)initMenuScrollView {
     _menuScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, kSelfViewWidth, _menuHeight)];
@@ -74,19 +91,6 @@ static const CGFloat kPartitionLineHeight = 0.3f; // 分隔线高度
     _menuScrollView.showsHorizontalScrollIndicator = NO;
     _menuScrollView.showsVerticalScrollIndicator = NO;
     [self addSubview:_menuScrollView];
-}
-
-- (void)initMenuButtons {
-    for (int i = 0; i < _pageCount; ++ i) {
-        UIButton *menuButton = [[UIButton alloc] initWithFrame:CGRectMake(i * (kSelfViewWidth / _menuNumberPerPage), 0, kSelfViewWidth / _menuNumberPerPage, _menuHeight - kIndicatorLineHeight)];
-        [self setupButton:menuButton withTag:(i + 1000) withText:[NSString stringWithFormat:@"第%d页",i + 1]];
-        
-        // 第一个MenuButton特殊处理
-        if (i == 0) {
-            [menuButton setTitleColor:_indicatorLineColor forState:UIControlStateNormal];
-            _formerButton = menuButton; // 初始的formerButton为第一个menuButton
-        }
-    }
 }
 
 - (void)initPartitionLine {
@@ -103,25 +107,13 @@ static const CGFloat kPartitionLineHeight = 0.3f; // 分隔线高度
 
 - (void)initContentScrollView {
     _contentScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, _menuHeight, kSelfViewWidth, kSelfViewHeight - _menuHeight)];
-    _contentScrollView.delegate = self;
     _contentScrollView.contentSize = CGSizeMake(_pageCount * kSelfViewWidth, kSelfViewHeight - _menuHeight);
+    _contentScrollView.delegate = self;
     _contentScrollView.pagingEnabled = YES;
     _contentScrollView.bounces = NO;
     _contentScrollView.showsHorizontalScrollIndicator = NO;
     _contentScrollView.showsVerticalScrollIndicator = NO;
     [self addSubview:_contentScrollView];
-}
-
-
-// MenuButton属性设定
-- (void)setupButton:(UIButton *)menuButton withTag:(int)tag withText:(NSString *)text {
-    menuButton.tag = tag;
-    [menuButton setTitle:text forState:UIControlStateNormal];
-    [menuButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    menuButton.titleLabel.font = [UIFont systemFontOfSize:16];
-    [menuButton addTarget:self action:@selector(clickMenuButton:) forControlEvents:UIControlEventTouchUpInside];
-    [_menuScrollView addSubview:menuButton];
-    
 }
 
 
@@ -164,18 +156,19 @@ static const CGFloat kPartitionLineHeight = 0.3f; // 分隔线高度
     [_formerButton setTitleColor:_indicatorLineColor forState:UIControlStateNormal];
 }
 
-// 设置菜单按钮名称
-- (void)setTitles:(NSArray *)titles {
-    for (int i = 0; i < _pageCount ; ++ i) {
-        UIButton *button = (UIButton *)[self.menuScrollView viewWithTag:i + 1000];
-        [button setTitle:[titles objectAtIndex:i ] forState:UIControlStateNormal];
-    }
+
+#pragma mark - Functions
+
+- (void)adjustMenuScrollViewAndContentScrollViewContentSize {
+    _menuScrollView.contentSize = CGSizeMake(kSelfViewWidth / _menuNumberPerPage * _pageCount, _menuHeight);
+    _contentScrollView.contentSize = CGSizeMake(_pageCount * kSelfViewWidth, kSelfViewHeight - _menuHeight);
 }
 
 // 设置传入的ViewController
-- (void)setupViewControllors:(NSMutableArray *)viewControllers {
-    for (int i = 0; i < _pageCount; ++ i) {
-        UIViewController *vc = (UIViewController *)[viewControllers objectAtIndex:i];
+- (void)setupViewControllors:(NSMutableArray *)viewControllers withFormerPageCount:(int)formerPageCount {
+    
+    for (int i = formerPageCount; i < _pageCount; ++ i) {
+        UIViewController *vc = (UIViewController *)[viewControllers objectAtIndex:(i - formerPageCount)];
         if ([vc isKindOfClass:[UIViewController class]]) {
             // 填充contentScrollView
             vc.view.frame = CGRectMake(i * kSelfViewWidth, 0, kSelfViewWidth, _contentScrollView.frame.size.height);
@@ -185,6 +178,40 @@ static const CGFloat kPartitionLineHeight = 0.3f; // 分隔线高度
     
 }
 
+// 设置MenuButton
+- (void)setupMenuButtonsWithFormerPageCount:(int)formerPageCount {
+    for (int i = formerPageCount; i < _pageCount; ++ i) {
+        UIButton *menuButton = [[UIButton alloc] initWithFrame:CGRectMake(i * (kSelfViewWidth / _menuNumberPerPage), 0, kSelfViewWidth / _menuNumberPerPage, _menuHeight - kIndicatorLineHeight)];
+        [self configButton:menuButton withTag:(i + 1000) text:[NSString stringWithFormat:@"第%d页",i + 1]];
+        
+        // 第一次设置MenuButton的时候第一个MenuButton特殊处理
+        if (formerPageCount == 0) {
+            if (i == 0) {
+                [menuButton setTitleColor:_indicatorLineColor forState:UIControlStateNormal];
+                _formerButton = menuButton; // 初始的formerButton为第一个menuButton
+            }
+        }
+    }
+}
+
+// 设置菜单按钮名称
+- (void)setupTitles:(NSArray *)titles withFormerPageCount:(int)formerPageCount {
+    for (int i = formerPageCount; i < _pageCount ; ++ i) {
+        UIButton *button = (UIButton *)[self.menuScrollView viewWithTag:i + 1000];
+        [button setTitle:[titles objectAtIndex:(i - formerPageCount)] forState:UIControlStateNormal];
+    }
+}
+
+// MenuButton属性设定
+- (void)configButton:(UIButton *)menuButton withTag:(int)tag text:(NSString *)text {
+    menuButton.tag = tag;
+    [menuButton setTitle:text forState:UIControlStateNormal];
+    [menuButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    menuButton.titleLabel.font = [UIFont systemFontOfSize:16];
+    [menuButton addTarget:self action:@selector(clickMenuButton:) forControlEvents:UIControlEventTouchUpInside];
+    [_menuScrollView addSubview:menuButton];
+    
+}
 
 
 #pragma mark - Actions
@@ -233,12 +260,12 @@ static const CGFloat kPartitionLineHeight = 0.3f; // 分隔线高度
 #pragma mark - <UIScrollViewDelegate>
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGFloat pageWidth = self.contentScrollView.frame.size.width;
+    CGFloat pageWidth = _contentScrollView.frame.size.width;
     
     // floor表示下取整
-    // eg:  当前为第2页，假设屏幕宽度320
+    // eg: 当前为第2页，假设屏幕宽度320
     // 则_contentScrollView.contentOffset.x = 320, pageWidth = 320
-    // 所以page = floor((320 - 320/2) / 320) + 1 = 1,即表示第2页。
+    // 所以_currentPage = floor((320 - 320/2) / 320) + 1 = 1,即表示第2页。
     _currentPage = floor((_contentScrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
 }
 

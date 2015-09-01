@@ -9,7 +9,6 @@
 #import "FifthViewController.h"
 #import "ViewController.h"
 #import "PushedViewController.h"
-#import "AppDelegate.h"
 
 @interface FifthViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -52,12 +51,10 @@ static NSString *cellIdentifier = @"cellIdentifier";
 #pragma - mark <UITableViewDelegate>
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    UINavigationController *nvc = (UINavigationController *)appDelegate.window.rootViewController;
-    
     PushedViewController *pdvc = [[PushedViewController alloc] init];
+    [self.navigationController pushViewController:pdvc animated:YES];
     
-    [nvc pushViewController:pdvc animated:YES];
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 @end

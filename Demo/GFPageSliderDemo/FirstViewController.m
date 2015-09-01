@@ -9,7 +9,6 @@
 #import "FirstViewController.h"
 #import "ViewController.h"
 #import "PushedViewController.h"
-#import "AppDelegate.h"
 
 @interface FirstViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -28,6 +27,7 @@ static NSString *cellIdentifier = @"cellIdentifier";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.view.backgroundColor = [UIColor whiteColor];
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, kSelfViewWidth, kSelfViewHeight)];
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
@@ -58,13 +58,11 @@ static NSString *cellIdentifier = @"cellIdentifier";
 
 #pragma - mark <UITableViewDelegate>
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    UINavigationController *nvc = (UINavigationController *)appDelegate.window.rootViewController;
-    
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {    
     PushedViewController *pdvc = [[PushedViewController alloc] init];
+    [self.navigationController pushViewController:pdvc animated:YES];
     
-    [nvc pushViewController:pdvc animated:YES];
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 
