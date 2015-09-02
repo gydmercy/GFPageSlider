@@ -5,10 +5,8 @@ It is a simple page slider module, easy to use and low coupling.
 It can be flexible to custom the height of the menubar, the visible number of menu in the menubar and the color of indicator.
 
 ## Screenshots
-![](http://7xjlak.com1.z0.glb.clouddn.com/pageslider1.png)
-![](http://7xjlak.com1.z0.glb.clouddn.com/pageslider2.png)
-![](http://7xjlak.com1.z0.glb.clouddn.com/pageslider3.png)
 
+![](http://7xjlak.com1.z0.glb.clouddn.com/iosgifGFPageSlider_GIF.gif)
 
 
 ## Installation
