@@ -237,6 +237,10 @@ static const CGFloat kPartitionLineHeight = 0.3f; // 分隔线高度
         else if (menuButton.tag > (1001 + (_pageCount - _menuNumberPerPage))) {
             [_menuScrollView setContentOffset:CGPointMake((_pageCount - _menuNumberPerPage) * (kSelfViewWidth / _menuNumberPerPage), 0) animated:YES];
         }
+        // 当页面滑到第一页的时候，菜单栏复位
+        else if (menuButton.tag < 1001) {
+            [_menuScrollView setContentOffset:CGPointMake(0, 0) animated:YES];
+        }
         
     }
     
