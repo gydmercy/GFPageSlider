@@ -162,6 +162,8 @@ static const CGFloat kPartitionLineHeight = 0.3f; // 分隔线高度
 - (void)adjustMenuScrollViewAndContentScrollViewContentSize {
     _menuScrollView.contentSize = CGSizeMake(kSelfViewWidth / _menuNumberPerPage * _pageCount, _menuHeight);
     _contentScrollView.contentSize = CGSizeMake(_pageCount * kSelfViewWidth, kSelfViewHeight - _menuHeight);
+    
+    _partitionLine.frame = CGRectMake(0, _menuHeight - kPartitionLineHeight, kSelfViewWidth / _menuNumberPerPage * _pageCount, kPartitionLineHeight);
 }
 
 // 设置传入的ViewController
