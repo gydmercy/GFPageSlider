@@ -24,7 +24,7 @@
 #define kSelfViewWidth self.frame.size.width
 #define kSelfViewHeight self.frame.size.height
 
-static const CGFloat kIndicatorLineHeight = 3.0f; // 下划线指示器的高度
+static const CGFloat kIndicatorLineHeight = 2.2f; // 下划线指示器的高度
 static const CGFloat kPartitionLineHeight = 0.3f; // 分隔线高度
 
 
@@ -47,10 +47,14 @@ static const CGFloat kPartitionLineHeight = 0.3f; // 分隔线高度
         _menuNumberPerPage = 4; // 默认屏幕可见Menu为4个
         _indicatorLineColor = [UIColor redColor]; // 默认IndicatorLine颜色为红色
         
+        
+        [self initFirstSubView];
+        
         [self initMenuScrollView];
         [self initPartitionLine];
         [self initIndicatorLine];
         [self initContentScrollView];
+        
         
         [self setupViewControllors:viewControllers withFormerPageCount:0];
         [self setupMenuButtonsWithFormerPageCount:0];
@@ -81,6 +85,12 @@ static const CGFloat kPartitionLineHeight = 0.3f; // 分隔线高度
 
 
 #pragma mark - Initialization
+
+- (void)initFirstSubView {
+    // 添加这个view，使得 MenuScrollView 不是第一个子视图，这样就可以解决iOS7之后 automaticallyAdjustsScrollViewInsets 引发的问题。
+    UIView *firstSubView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, kSelfViewWidth, 0.1)];
+    [self addSubview:firstSubView];
+}
 
 - (void)initMenuScrollView {
     _menuScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, kSelfViewWidth, _menuHeight)];

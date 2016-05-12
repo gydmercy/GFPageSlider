@@ -34,7 +34,6 @@
     
     self.title = @"GFPageSliderDemo";
     self.view.backgroundColor = [UIColor whiteColor];
-    self.edgesForExtendedLayout = UIRectEdgeNone; // 内容不扩展
     
     
     
@@ -50,7 +49,7 @@
     [self addChildViewController:_viewControllers[3]];
     
     // 3、初始化PageSlider,传入页面数量、各个页面的ViewController对象以及Titles
-    GFPageSlider *pageSlider = [[GFPageSlider alloc] initWithFrame:CGRectMake(0, 0, kSelfViewWidth, kSelfViewHeight - 64)
+    GFPageSlider *pageSlider = [[GFPageSlider alloc] initWithFrame:CGRectMake(0, 64, kSelfViewWidth, kSelfViewHeight - 64)
                                                       numberOfPage:4
                                                    viewControllers:_viewControllers
                                                   menuButtonTitles:@[@"头条", @"娱乐", @"热点", @"体育"]];
