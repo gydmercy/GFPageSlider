@@ -15,9 +15,12 @@
 @property (strong, nonatomic) UIScrollView *contentScrollView; //!< 滑动页部分
 @property (strong, nonatomic) UIView *partitionLine; //!< 分隔线
 @property (strong, nonatomic) UIView *indicatorLine; //!< 下划线指示器
-@property (strong, nonatomic) UIButton *formerButton; //!< 前一次选择的MenuButton
+@property (strong, nonatomic) UIButton *previousButton; //!< 前一次选择的MenuButton
 @property (nonatomic) int pageCount; //!< 页面数量
-@property (nonatomic) NSInteger currentPage; //!< 当前页
+@property (nonatomic) NSInteger currentPage; //!< 当前页(实时)
+
+@property (nonatomic) NSInteger previousPage; //!<滑动后的之前页(静止时的当前页)
+@property (nonatomic) CGFloat previousIndicatorOriginX; //!< 之前IndicatorLine的原点x坐标(静止时的当前原点x坐标)
 
 @end
 
@@ -42,6 +45,10 @@ static const CGFloat kPartitionLineHeight = 0.3f; // 分隔线高度
     if (self) {
         _pageCount = pageCount;
         _currentPage = 0; // 初始为第一页
+        
+        _previousPage = 0;
+        _previousIndicatorOriginX = 0.0;
+        
         
         _menuHeight = 35.0f; // 默认Menu高度为35.0f
         _menuNumberPerPage = 4; // 默认屏幕可见Menu为4个
@@ -163,7 +170,7 @@ static const CGFloat kPartitionLineHeight = 0.3f; // 分隔线高度
     _indicatorLineColor = indicatorLineColor;
     
     _indicatorLine.backgroundColor = indicatorLineColor;
-    [_formerButton setTitleColor:_indicatorLineColor forState:UIControlStateNormal];
+    [_previousButton setTitleColor:_indicatorLineColor forState:UIControlStateNormal];
 }
 
 
@@ -200,7 +207,7 @@ static const CGFloat kPartitionLineHeight = 0.3f; // 分隔线高度
         if (formerPageCount == 0) {
             if (i == 0) {
                 [menuButton setTitleColor:_indicatorLineColor forState:UIControlStateNormal];
-                _formerButton = menuButton; // 初始的formerButton为第一个menuButton
+                _previousButton = menuButton; // 初始的previousButton为第一个menuButton
             }
         }
     }
@@ -230,41 +237,7 @@ static const CGFloat kPartitionLineHeight = 0.3f; // 分隔线高度
 
 // 点击MenuButton触发事件
 - (void)clickMenuButton:(UIButton *)menuButton {
-    [self moveIndicatorWithButton:menuButton];
     [self changePageWithSelectedButton:menuButton];
-}
-
-- (void)moveIndicatorWithButton:(UIButton *)menuButton {
-    [UIView beginAnimations:nil context:nil]; // 开始动画
-    
-    if (_pageCount > _menuNumberPerPage) { // 只有当翻页的页面数比菜单栏名目可见菜单多的时候才需要在滑动过程中移动菜单栏
-        
-        // _pageCount - _menuNumberPerPage 表示总共的页面数与屏幕可见页面之差
-        // 需要移动的最大距离也就是(_pageCount - _menuNumberPerPage)个MenuButton宽度
-        // 从第二个MenuButton开始移动，被选中的MenuButton就移动到屏幕上第二个MenuButton的位置
-        if (menuButton.tag >= 1001 && menuButton.tag <= (1001 + (_pageCount - _menuNumberPerPage)) ) {
-            [_menuScrollView setContentOffset:CGPointMake((menuButton.tag - 1001) * (kSelfViewWidth / _menuNumberPerPage), 0) animated:YES];
-        }
-        // 而当菜单栏移动到底的时候，剩余每个MenuButton选中时的偏移距离都统一设置为(_pageCount - _menuNumberPerPage)个MenuButton宽度
-        else if (menuButton.tag > (1001 + (_pageCount - _menuNumberPerPage))) {
-            [_menuScrollView setContentOffset:CGPointMake((_pageCount - _menuNumberPerPage) * (kSelfViewWidth / _menuNumberPerPage), 0) animated:YES];
-        }
-        // 当页面滑到第一页的时候，菜单栏复位
-        else if (menuButton.tag < 1001) {
-            [_menuScrollView setContentOffset:CGPointMake(0, 0) animated:YES];
-        }
-        
-    }
-    
-    if([menuButton isKindOfClass:[UIButton class]]) {
-        [_formerButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [menuButton setTitleColor:_indicatorLineColor forState:UIControlStateNormal];
-        [_indicatorLine setFrame:CGRectMake(menuButton.frame.origin.x, _menuHeight - kIndicatorLineHeight, kSelfViewWidth / _menuNumberPerPage, kIndicatorLineHeight)];
-    }
-    
-    [UIView commitAnimations]; // 结束动画
-    
-    _formerButton = menuButton; // 设置formerButton为当前button
 }
 
 - (void)changePageWithSelectedButton:(UIButton *)menuButton {
@@ -272,8 +245,48 @@ static const CGFloat kPartitionLineHeight = 0.3f; // 分隔线高度
     [_contentScrollView setContentOffset:CGPointMake(_currentPage * kSelfViewWidth, 0) animated:YES];
 }
 
+- (void)moveIndicatorWithButton:(UIButton *)menuButton {
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        
+        // 只有当翻页的页面数比菜单栏名目可见菜单多的时候才需要在滑动过程中移动菜单栏
+        if (_pageCount > _menuNumberPerPage) {
+            
+            // _pageCount - _menuNumberPerPage 表示总共的页面数与屏幕可见页面之差
+            // 需要移动的最大距离也就是(_pageCount - _menuNumberPerPage)个MenuButton宽度
+            // 从第二个MenuButton开始移动，被选中的MenuButton就移动到屏幕上第二个MenuButton的位置
+            if (menuButton.tag >= 1001 && menuButton.tag <= (1001 + (_pageCount - _menuNumberPerPage)) ) {
+                [_menuScrollView setContentOffset:CGPointMake((menuButton.tag - 1001) * (kSelfViewWidth / _menuNumberPerPage), 0) animated:YES];
+            }
+            // 而当菜单栏移动到底的时候，剩余每个MenuButton选中时的偏移距离都统一设置为(_pageCount - _menuNumberPerPage)个MenuButton宽度
+            else if (menuButton.tag > (1001 + (_pageCount - _menuNumberPerPage))) {
+                [_menuScrollView setContentOffset:CGPointMake((_pageCount - _menuNumberPerPage) * (kSelfViewWidth / _menuNumberPerPage), 0) animated:YES];
+            }
+            // 当页面滑到第一页的时候，菜单栏复位
+            else if (menuButton.tag < 1001) {
+                [_menuScrollView setContentOffset:CGPointMake(0, 0) animated:YES];
+            }
+            
+        }
+        
+        if([menuButton isKindOfClass:[UIButton class]]) {
+            [_previousButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [menuButton setTitleColor:_indicatorLineColor forState:UIControlStateNormal];
+            [_indicatorLine setFrame:CGRectMake(menuButton.frame.origin.x, _menuHeight - kIndicatorLineHeight, kSelfViewWidth / _menuNumberPerPage, kIndicatorLineHeight)];
+        }
+        
+    }];
+    
+    _previousButton = menuButton; // 设置previousButton为当前button
+    
+    // 滑动静止时，更新状态
+    _previousPage = _currentPage;
+    _previousIndicatorOriginX = _indicatorLine.frame.origin.x;
+    
+}
 
-#pragma mark - <UIScrollViewDelegate>
+
+#pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     
@@ -286,10 +299,21 @@ static const CGFloat kPartitionLineHeight = 0.3f; // 分隔线高度
     CGFloat pageWidth = kSelfViewWidth;
     _currentPage = floor((offsetX - pageWidth / 2) / pageWidth) + 1;
 
+
+    // 以下代码控制页面滑动的时候，indicatorLine同步滑动
+    CGFloat contentMoveX = offsetX - _previousPage * pageWidth; // 页面滑动的距离
+    CGFloat indicatorLineMoveX = (contentMoveX / pageWidth) * _indicatorLine.frame.size.width; // 等比推出indicatorLine应该移动的距离
+    _indicatorLine.frame = CGRectMake(_previousIndicatorOriginX + indicatorLineMoveX, _indicatorLine.frame.origin.y, _indicatorLine.frame.size.width, _indicatorLine.frame.size.height);
+
     
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    UIButton *menuButton = (UIButton *)[_menuScrollView viewWithTag:_currentPage + 1000];
+    [self moveIndicatorWithButton:menuButton];
+}
+
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
     UIButton *menuButton = (UIButton *)[_menuScrollView viewWithTag:_currentPage + 1000];
     [self moveIndicatorWithButton:menuButton];
 }
