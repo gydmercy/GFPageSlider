@@ -276,13 +276,17 @@ static const CGFloat kPartitionLineHeight = 0.3f; // 分隔线高度
 #pragma mark - <UIScrollViewDelegate>
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGFloat pageWidth = _contentScrollView.frame.size.width;
+    
+    CGFloat offsetX = _contentScrollView.contentOffset.x;
     
     // floor表示下取整
     // eg: 当前为第2页，假设屏幕宽度320
     // 则_contentScrollView.contentOffset.x = 320, pageWidth = 320
     // 所以_currentPage = floor((320 - 320/2) / 320) + 1 = 1,即表示第2页。
-    _currentPage = floor((_contentScrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+    CGFloat pageWidth = kSelfViewWidth;
+    _currentPage = floor((offsetX - pageWidth / 2) / pageWidth) + 1;
+
+    
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
