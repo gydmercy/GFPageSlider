@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "GFPageSlider"
-  s.version      = "1.1.1"
+  s.version      = "1.2"
   s.summary      = "a simple page slider module, easy to use and low coupling"
   s.homepage     = "https://github.com/gydmercy/GFPageSlider"
   s.license      = "MIT"
